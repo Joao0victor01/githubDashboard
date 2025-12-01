@@ -16,7 +16,7 @@ Uma aplicação moderna e elegante para explorar repositórios públicos do GitH
 - Tema dark premium com glassmorphism e sombras suaves  
 - Totalmente internacionalizado (Português e Inglês)  
 - Estado global com Zustand  
-- 100% TypeScript, sem `any`, ESLint + Prettier  
+- 100% TypeScript, ESLint + Prettier  
 
 ## Tecnologias
 
