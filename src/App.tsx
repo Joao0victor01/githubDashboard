@@ -62,7 +62,6 @@ function App() {
         flexDirection: "column",
       }}
     >
-      {/* TELA INICIAL — LOGO + CAMPO + BOTÃO BEM JUNTINHOS */}
       {showWelcomeScreen && (
         <Box
           sx={{
@@ -71,10 +70,9 @@ function App() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 0, // espaço pequeno entre logo, campo e botão
+            gap: 0,
           }}
         >
-          {/* Logo do GitHub */}
           <Paper
             elevation={20}
             sx={{
@@ -101,14 +99,12 @@ function App() {
         </Box>
       )}
 
-      {/* CAMPO + BOTÃO — MUITO PRÓXIMOS DO LOGO */}
       <Box
         sx={{
           width: { xs: "100%", sm: 600 },
           maxWidth: 600,
           mx: "auto",
           px: 3,
-          // POSICIONAMENTO: bem em cima do logo na tela inicial
           mt: showWelcomeScreen ? -4 : 4,
           mb: showWelcomeScreen ? 24 : 6,
           zIndex: 10,
@@ -179,7 +175,6 @@ function App() {
           }}
         />
 
-        {/* Botão bem colado no campo */}
         <Button
           fullWidth
           variant="contained"
@@ -202,7 +197,6 @@ function App() {
         </Button>
       </Box>
 
-      {/* DASHBOARD — DEPOIS DA BUSCA */}
       {!showWelcomeScreen && (
         <Box sx={{ flex: 1, px: { xs: 2, md: 4 }, pb: 12 }}>
           {username && repos.length > 0 && (

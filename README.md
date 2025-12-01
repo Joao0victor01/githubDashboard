@@ -1,73 +1,42 @@
-# React + TypeScript + Vite
+# GitHub Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Uma aplicação moderna e elegante para explorar repositórios públicos do GitHub: busca por usuário, tabela paginada com filtro por linguagem e gráfico de distribuição de linguagens.
 
-Currently, two official plugins are available:
+**Deploy ao vivo** → [https://github-dashboard-seunome.vercel.app](https://github-dashboard-seunome.vercel.app) *(substitua pelo seu link quando publicar)*
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![preview](https://i.imgur.com/XXXXXXX.png)  
+*(substitua pela screenshot do seu projeto quando tiver)*
 
-## React Compiler
+## Funcionalidades
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Busca com autocomplete (avatar + nome de usuário)  
+- Tela inicial minimalista com logo do GitHub  
+- Tabela responsiva com paginação (5 itens por padrão) e filtro por linguagem  
+- Gráfico de pizza mostrando quantidade de repositórios por linguagem  
+- Tema dark premium com glassmorphism e sombras suaves  
+- Totalmente internacionalizado (Português e Inglês)  
+- Estado global com Zustand  
+- 100% TypeScript, sem `any`, ESLint + Prettier  
 
-## Expanding the ESLint configuration
+## Tecnologias
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React 19** + **TypeScript**
+- **Vite** (com Rolldown para builds ultra-rápidas)
+- **MUI v7** + **MUI X DataGrid**
+- **ECharts** (via `echarts-for-react`)
+- **Zustand** (gerenciamento de estado)
+- **i18next** (internacionalização)
+- **Axios** (requisições à API pública do GitHub)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Como rodar localmente
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/github-dashboard.git
+cd github-dashboard
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# Instale as dependências
+npm install
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# Rode o servidor de desenvolvimento
+npm run dev
