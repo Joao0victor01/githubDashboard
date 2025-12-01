@@ -1,11 +1,6 @@
 # GitHub Dashboard
 
-Uma aplicação moderna e elegante para explorar repositórios públicos do GitHub: busca por usuário, tabela paginada com filtro por linguagem e gráfico de distribuição de linguagens.
-
-**Deploy ao vivo** → [https://github-dashboard-seunome.vercel.app](https://github-dashboard-seunome.vercel.app) *(substitua pelo seu link quando publicar)*
-
-![preview](https://i.imgur.com/XXXXXXX.png)  
-*(substitua pela screenshot do seu projeto quando tiver)*
+Uma aplicação para explorar repositórios públicos do GitHub: busca por usuário, tabela paginada com filtro por linguagem e gráfico de distribuição de linguagens.
 
 ## Funcionalidades
 
