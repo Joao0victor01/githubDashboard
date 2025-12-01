@@ -1,5 +1,15 @@
 import axios from "axios";
 
+interface GithubSearchUserResponse {
+  items: {
+    login: string;
+    avatar_url: string;
+    id: number;
+    html_url: string;
+    type: string;
+  }[];
+}
+
 export interface GithubUser {
   login: string;
   avatar_url: string;
@@ -10,7 +20,7 @@ export async function searchUsers(query: string): Promise<GithubUser[]> {
 
   const token = import.meta.env.VITE_GITHUB_TOKEN;
 
-  const res = await axios.get(
+  const res = await axios.get<GithubSearchUserResponse>(
     `https://api.github.com/search/users?q=${encodeURIComponent(query)} in:login&per_page=10`,
     {
       headers: {
@@ -20,7 +30,7 @@ export async function searchUsers(query: string): Promise<GithubUser[]> {
     }
   );
 
-  return res.data.items.map((item: any) => ({
+  return res.data.items.map((item) => ({
     login: item.login,
     avatar_url: item.avatar_url,
   }));

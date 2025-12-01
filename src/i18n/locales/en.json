@@ -1,0 +1,17 @@
+{
+  "title": "GitHub Dashboard",
+  "user_repos": "Repositories of <strong>{{username}}</strong>",
+  "search_placeholder": "Search GitHub user...",
+  "search_button": "Search Repositories",
+  "loading_repos": "Loading repositories...",
+  "error_user_not_found": "User not found.",
+  "error_generic": "Error loading data. Try again.",
+  "no_repos": "This user has no public repositories.",
+  "table_title": "Repositories",
+  "column_name": "Name",
+  "column_language": "Language",
+  "column_stars": "Stars",
+  "column_forks": "Forks",
+  "column_updated": "Updated on",
+  "chart_title": "Repositories by Language"
+}

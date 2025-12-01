@@ -11,12 +11,12 @@ body {
 .container {
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;   /* centraliza */
+  margin: 0 auto;
   padding: 40px 20px;
   text-align: center;
 }
 
-/* Botão principal */
+
 button {
   padding: 12px 22px;
   border: none;
@@ -33,7 +33,6 @@ button:hover {
   background: #2ea043;
 }
 
-/* GRID CENTRALIZADO */
 .grid {
   margin-top: 35px;
   display: grid;
@@ -43,7 +42,6 @@ button:hover {
   gap: 40px;
 }
 
-/* CARD GENÉRICO */
 .card {
   background: #161b22;
   padding: 25px;
@@ -51,7 +49,6 @@ button:hover {
   box-shadow: 0 0 15px #0007;
 }
 
-/* TÍTULOS */
 h1 {
   font-size: 40px;
   font-weight: bold;
@@ -61,7 +58,6 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* TABELA */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -86,7 +82,6 @@ tr:hover {
   background: #1d2633;
 }
 
-/* SELECT DE FILTRO */
 select {
   margin-bottom: 15px;
   padding: 8px 12px;
@@ -96,7 +91,6 @@ select {
   border: 1px solid #30363d;
 }
 
-/* PAGINAÇÃO */
 .pagination {
   margin-top: 12px;
   display: flex;

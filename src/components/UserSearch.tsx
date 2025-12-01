@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDebounce } from "../hooks/useDebounce";
-import { searchUsers } from "../api/searchUsers"; // sua função de busca da API
+import { searchUsers } from "../api/searchUsers";
 import type { GithubUser } from "../api/searchUsers";
 
 export default function UserSearch({ onSelect }: { onSelect: (login: string) => void }) {
@@ -8,7 +8,6 @@ export default function UserSearch({ onSelect }: { onSelect: (login: string) => 
   const [users, setUsers] = useState<GithubUser[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Espera 600ms antes de executar pesquisa
   const debouncedQuery = useDebounce(query, 600);
 
   useEffect(() => {
@@ -21,7 +20,7 @@ export default function UserSearch({ onSelect }: { onSelect: (login: string) => 
       setLoading(true);
       try {
         const data = await searchUsers(debouncedQuery);
-        setUsers(data.slice(0, 10)); // pega até 10 usuários
+        setUsers(data.slice(0, 10));
       } finally {
         setLoading(false);
       }
@@ -64,7 +63,7 @@ export default function UserSearch({ onSelect }: { onSelect: (login: string) => 
         >
           {users.map((u) => (
             <li
-              key={u.id}
+              key={u.login}
               onClick={() => {
                 onSelect(u.login);
                 setQuery(u.login);

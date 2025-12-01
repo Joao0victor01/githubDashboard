@@ -1,10 +1,21 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRepoStore } from "./store/useRepoStore";
-import RepoTable from "./components/RepoTable";
+import RepoDataGrid from "./components/RepoDataGrid";
 import { LanguageChart } from "./components/LanguageChart";
 import { useDebounce } from "./hooks/useDebounce";
+import { useTranslation } from "react-i18next";
+
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Autocomplete from "@mui/material/Autocomplete";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
+import Paper from "@mui/material/Paper";
 
 function App() {
+  const { t } = useTranslation();
   const {
     repos,
     suggestions,
@@ -18,9 +29,7 @@ function App() {
   } = useRepoStore();
 
   const [inputValue, setInputValue] = useState("");
-  const [isDropdownHovered, setIsDropdownHovered] = useState(false);
-
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [open, setOpen] = useState(false);
 
   const debouncedValue = useDebounce(inputValue, 600);
 
@@ -32,165 +41,205 @@ function App() {
     }
   }, [debouncedValue, fetchSuggestions]);
 
-  const handleConfirmUser = (name: string) => {
-    const trimmed = name.trim();
-    if (trimmed) {
-      setUsername(trimmed);
-      setInputValue(trimmed);
+  const handleSelect = (login: string | null) => {
+    if (login?.trim()) {
+      setUsername(login.trim());
+      setInputValue(login.trim());
       clearSuggestions();
       loadRepos();
     }
   };
 
-  const isInputFocused = document.activeElement === inputRef.current;
-
-  // REGRA FINAL: aparece se input focado OU mouse sobre o dropdown
-  const showDropdown = suggestions.length > 0 && (isInputFocused || isDropdownHovered);
+  const showWelcomeScreen = !username && repos.length === 0 && !error;
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         minHeight: "100vh",
-        background: "#111418",
+        bgcolor: "background.default",
         color: "white",
-        padding: "40px 20px",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        gap: "30px",
       }}
     >
-      <h1 style={{ fontSize: "3rem", fontWeight: "bold" }}>GitHub Dashboard</h1>
-
-      {username && repos.length > 0 && (
-        <h2 style={{ fontSize: "1.5rem", opacity: 0.9 }}>
-          Repositórios de <strong>{username}</strong>
-        </h2>
-      )}
-
-      <div style={{ position: "relative", width: "380px" }}>
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Buscar usuário do GitHub..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && inputValue.trim()) {
-              handleConfirmUser(inputValue);
-            }
+      {/* TELA INICIAL — LOGO + CAMPO + BOTÃO BEM JUNTINHOS */}
+      {showWelcomeScreen && (
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 0, // espaço pequeno entre logo, campo e botão
           }}
-          onFocus={() => inputValue.trim().length > 1 && fetchSuggestions(inputValue)}
-          style={{
-            width: "100%",
-            padding: "14px 16px",
-            borderRadius: "12px",
-            border: "none",
-            fontSize: "1.1rem",
-            outline: "none",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
-            background: "#1f2937",
-            color: "white",
-          }}
-        />
-
-        {/* Dropdown com proteção contra clique perdido */}
-        {showDropdown && (
-          <ul
-            onMouseEnter={() => setIsDropdownHovered(true)}
-            onMouseLeave={() => setIsDropdownHovered(false)}
-            style={{
-              position: "absolute",
-              top: "56px",
-              left: "-5px",
-              width: "calc(100% + 32px)",
-              minWidth: "420px",
-              background: "#1c1f24",
-              borderRadius: "12px",
-              padding: "12px 0",
-              listStyle: "none",
-              maxHeight: "340px",
-              overflowY: "auto",
-              zIndex: 20,
-              boxShadow: "0 12px 32px rgba(0,0,0,0.6)",
-              border: "1px solid #333",
+        >
+          {/* Logo do GitHub */}
+          <Paper
+            elevation={20}
+            sx={{
+              width: { xs: 120, sm: 160 },
+              height: { xs: 120, sm: 160 },
+              borderRadius: 5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "white",
+              p: 2,
             }}
           >
-            {suggestions.map((user) => (
-              <li
-                key={user.login}
-                onClick={() => handleConfirmUser(user.login)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "12px 16px",
-                  cursor: "pointer",
-                  gap: "12px",
-                  transition: "background 0.2s",
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "#2563eb33")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-              >
+            <img
+              src="/githubIcon.svg"
+              alt="GitHub"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
+          </Paper>
+
+          <Typography variant="h3" fontWeight="bold" textAlign="center">
+            {t("title")}
+          </Typography>
+        </Box>
+      )}
+
+      {/* CAMPO + BOTÃO — MUITO PRÓXIMOS DO LOGO */}
+      <Box
+        sx={{
+          width: { xs: "100%", sm: 600 },
+          maxWidth: 600,
+          mx: "auto",
+          px: 3,
+          // POSICIONAMENTO: bem em cima do logo na tela inicial
+          mt: showWelcomeScreen ? -4 : 4,
+          mb: showWelcomeScreen ? 24 : 6,
+          zIndex: 10,
+        }}
+      >
+        <Autocomplete
+          freeSolo
+          open={open}
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
+          options={suggestions.map((u) => u.login)}
+          loading={loading && suggestions.length === 0}
+          inputValue={inputValue}
+          onInputChange={(_, v) => setInputValue(v || "")}
+          onChange={(_, v) => handleSelect(v)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={t("search_placeholder")}
+              variant="outlined"
+              fullWidth
+              size="medium"
+              onKeyDown={(e) => e.key === "Enter" && handleSelect(inputValue)}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading ? <CircularProgress size={24} /> : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  bgcolor: "background.paper",
+                  borderRadius: 4,
+                  boxShadow: "0 10px 40px rgba(0,0,0,0.5)",
+                  transition: "all 0.3s ease",
+                  "&:hover": { boxShadow: "0 16px 50px rgba(0,0,0,0.6)" },
+                  "&.Mui-focused": { boxShadow: "0 16px 50px rgba(37, 99, 235, 0.4)" },
+                  "& fieldset": { border: "2px solid rgba(255,255,255,0.12)" },
+                  "&:hover fieldset": { borderColor: "rgba(255,255,255,0.25)" },
+                  "&.Mui-focused fieldset": { borderColor: "#2563eb", borderWidth: 2 },
+                },
+                "& .MuiInputLabel-root": { color: "rgba(255,255,255,0.7)" },
+                "& .MuiInputLabel-root.Mui-focused": { color: "#2563eb" },
+              }}
+            />
+          )}
+          renderOption={(props, option) => {
+            const user = suggestions.find((u) => u.login === option);
+            if (!user) return null;
+
+            return (
+              <Box component="li" {...props} sx={{ display: "flex", alignItems: "center", gap: 2, py: 1.5 }}>
                 <img
                   src={user.avatar_url}
                   alt={user.login}
-                  width={38}
-                  height={38}
-                  style={{ borderRadius: "50%", objectFit: "cover" }}
+                  width={42}
+                  height={42}
+                  style={{ borderRadius: "50%" }}
                 />
-                <div style={{ fontWeight: 600 }}>{user.login}</div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                <Typography fontWeight="bold" fontSize="1.1rem">
+                  {user.login}
+                </Typography>
+              </Box>
+            );
+          }}
+        />
 
-      <button
-        onClick={() => handleConfirmUser(inputValue)}
-        disabled={loading || !inputValue.trim()}
-        style={{
-          background: inputValue.trim() && !loading ? "#2563eb" : "#374151",
-          padding: "12px 32px",
-          borderRadius: "12px",
-          border: "none",
-          fontSize: "1.1rem",
-          fontWeight: "600",
-          cursor: inputValue.trim() && !loading ? "pointer" : "not-allowed",
-          opacity: loading ? 0.7 : 1,
-          transition: "all 0.2s",
-        }}
-      >
-        {loading ? "Carregando repositórios..." : "Buscar Repositórios"}
-      </button>
-
-      {error && (
-        <p style={{ color: "#ef4444", fontWeight: "bold", fontSize: "1.1rem" }}>
-          {error}
-        </p>
-      )}
-
-      {repos.length > 0 && (
-        <div
-          style={{
-            width: "100%",
-            maxWidth: "1400px",
-            display: "grid",
-            gap: "50px",
-            gridTemplateColumns: "1fr 1fr",
-            alignItems: "start",
+        {/* Botão bem colado no campo */}
+        <Button
+          fullWidth
+          variant="contained"
+          size="large"
+          onClick={() => handleSelect(inputValue)}
+          disabled={loading || !inputValue.trim()}
+          sx={{
+            mt: 2.5,
+            py: 2,
+            borderRadius: 4,
+            fontSize: "1.15rem",
+            fontWeight: "bold",
+            textTransform: "none",
+            bgcolor: "#2563eb",
+            "&:hover": { bgcolor: "#1d4ed8" },
+            "&:disabled": { bgcolor: "#374151" },
           }}
         >
-          <RepoTable />
-          <LanguageChart repos={repos} />
-        </div>
-      )}
+          {loading ? t("loading_repos") : t("search_button")}
+        </Button>
+      </Box>
 
-      {username && repos.length === 0 && !loading && !error && (
-        <p style={{ opacity: 0.7, fontSize: "1.1rem" }}>
-          Este usuário não tem repositórios públicos.
-        </p>
+      {/* DASHBOARD — DEPOIS DA BUSCA */}
+      {!showWelcomeScreen && (
+        <Box sx={{ flex: 1, px: { xs: 2, md: 4 }, pb: 12 }}>
+          {username && repos.length > 0 && (
+            <Typography variant="h4" fontWeight="bold" textAlign="center" mb={8}>
+              Repositórios de <strong>{username}</strong>
+            </Typography>
+          )}
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 6, maxWidth: 800, mx: "auto" }}>
+              {error}
+            </Alert>
+          )}
+
+          {repos.length > 0 && (
+            <Box
+              sx={{
+                maxWidth: 1400,
+                mx: "auto",
+                display: "grid",
+                gap: 8,
+                gridTemplateColumns: { xs: "1fr", lg: "1fr 1fr" },
+              }}
+            >
+              <RepoDataGrid />
+              <LanguageChart repos={repos} />
+            </Box>
+          )}
+
+          {username && repos.length === 0 && !loading && !error && (
+            <Typography textAlign="center" color="text.secondary" variant="h6" mt={14}>
+              {t("no_repos")}
+            </Typography>
+          )}
+        </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
