@@ -32,7 +32,7 @@ Uma aplicação moderna e elegante para explorar repositórios públicos do GitH
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/github-dashboard.git
+git clone https://github.com/Joao0victor01/github-dashboard.git
 cd github-dashboard
 
 # Instale as dependências
